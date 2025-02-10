@@ -1,5 +1,6 @@
 
-async function gradePuller(courseName) {
+
+async function pullGrade(courseName) {
 
         courseName = courseName.replace(/ /g, ""); // Removes all spaces
 
@@ -45,4 +46,4 @@ async function gradePuller(courseName) {
         console.log(grades)
     };
 
-gradePuller("cs200");
+// gradePuller("cs200");

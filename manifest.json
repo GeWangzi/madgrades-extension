@@ -1,32 +1,26 @@
 {
   "manifest_version": 3,
-  "name": "UW Course Grades Viewer",
+  "name": "Madgrades Viewer",
   "version": "1.0",
-  "description": "Displays grade distribution for UW courses.",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "https://madgrades.com/*"
-  ],
+  "description": "Displays grade distribution for UW Madison courses.",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://my.wisc.edu/*"
-      ],
-      "js": [
-        "content.js"
-      ]
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
     }
   ],
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "Madgrades Viewer",
+    "default_popup": "popup.html"
   }
 }
