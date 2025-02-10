@@ -6,6 +6,35 @@ chrome.storage.local.get("currentUrl", (data) => {
     }
 });
 
+/////////////////////////////
+
+document.getElementById('myButton').addEventListener('click', function() {
+    console.log('Button clicked!');
+
+    if (getCourseName) {
+        document.getElementById("nameDisplay").textContent = "Current name: " + getCourseName();
+    } else {
+        document.getElementById("nameDisplay").textContent = "No name found.";
+    }
+    
+  });
+  
+//////////////////////////////////////////////
+//ATTEMPS TO EXRACT COURSE NAME (NEEDS TO BE IN content.js TO WORK)
+function getCourseName() {
+    // Check if an <h2> element exists before trying to access its text
+    const name = document.querySelector('h2');
+    if (name) {
+      console.log(name);
+      // Send extracted text to background script
+      return { text: name.innerText };
+    } else {
+      console.log("No name found.");
+    }
+  }
+
+////////////////////////////////////////////////
+///(WORKS)
 async function pullGrade(courseName) {
 
     courseName = courseName.replace(/ /g, ""); // Removes all spaces
@@ -42,7 +71,6 @@ async function pullGrade(courseName) {
             "Content-Type": "application/json"
         }
     });
-
     if (!courseGrades.ok) {
         throw new Error(`HTTP error! status: ${courseGrades.status}`);
     }
