@@ -1,84 +1,115 @@
-////////////////////////////////////////////////
-///(WORKS)
-async function pullGrade(courseName) {
+// ////////////////////////////////////////////////
+// ///(WORKS)
 
-    courseName = courseName.replace(/ /g, ""); // Removes all spaces
 
-    let url = "https://api.madgrades.com/v1/courses?query=" + courseName;
-    const token = "bfc4b27f0b284ffbb1c6c3da7845f1ad ";
-    //GET call for UUID
-    const courseData = await fetch(url, {
-        method: "GET",
-        headers: {
-            "Authorization": `Token token=${token}`,
-            "Content-Type": "application/json"
+// async function main() {
+//     try {
+//         const grades = await pullGrade("cs200"); // Wait for pullGrade to resolve
+//         // console.log("Grades:", grades);
+
+//         console.log(jsonToGPA(grades)); // Pass resolved data to jsonToGPA
+//     } catch (error) {
+//         console.error("Error fetching grades:", error);
+//     }
+// }
+
+// main();
+// popup.js
+document.addEventListener("DOMContentLoaded", () => {
+    chrome.storage.local.get("courseGrades", (data) => {
+        if (data.courseGrades) {
+            console.log("Received grades:", data.courseGrades);
+            displayChart(data.courseGrades.cumulative);
         }
     });
+});
 
-    if (!courseData.ok) {
-        throw new Error(`HTTP error! status: ${courseData.status}`);
-    }
+function displayChart(grades) {
+    const ctx = document.getElementById("gradesChart").getContext("2d");
+    console.log("Grades:", grades);
+    const labels = ["A", "AB", "B", "BC", "C", "D", "F"];
+    const values = [
+        grades.aCount || 0,
+        grades.abCount || 0,
+        grades.bCount || 0,
+        grades.bcCount || 0,
+        grades.cCount || 0,
+        grades.dCount || 0,
+        grades.fCount || 0
+    ];
+    console.log("Values",values);
 
-    const data = await courseData.json();
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: "Grade Distribution",
+            data: values,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(201, 203, 207, 0.2)'
+              ],
+              borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+              ],
+            boarderWidth: 1,
+        }]
+    };
 
-    //Grabs UUID
-    // console.log(data)
-    const uuid = data.results[0].uuid;
-    // console.log(uuid);
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        },
+      };
 
-    let uuidURL = "https://api.madgrades.com/v1/courses/" + uuid + "/grades"
-
-    //GET call for UUID
-    const courseGrades = await fetch(uuidURL, {
-        method: "GET",
-        headers: {
-            "Authorization": `Token token=${token}`,
-            "Content-Type": "application/json"
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Grade Distribution",
+                data: values,
+                backgroundColor: ["#4CAF50", "#8BC34A", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#F44336"]
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
         }
     });
-    if (!courseGrades.ok) {
-        throw new Error(`HTTP error! status: ${courseGrades.status}`);
-    }
+}
 
-    const grades = await courseGrades.json();
-    console.log(grades);
-
-    return grades;
-};
 
 function jsonToGPA(json) {
-    console.log("course", json)
-    console.log("cumu",json.cumulative)
-    const total = json.cumulative.total;
-    const a = json.cumulative.aCount;
-    const ab = json.cumulative.abCount;
-    const b = json.cumulative.bCount;
-    const bc = json.cumulative.bcCount;
-    const c = json.cumulative.cCount;
-    const d = json.cumulative.dCount;
-    const f = json.cumulative.fCount;
-    
-    const gpaList = [];
-    gpaList.push(a/total);
-    gpaList.push(ab/total);
-    gpaList.push(b/total);
-    gpaList.push(bc/total);
-    gpaList.push(c/total);
-    gpaList.push(d/total);
-    gpaList.push(f/total);
-
-    return gpaList;
-}
-
-async function main() {
-    try {
-        const grades = await pullGrade("cs200"); // Wait for pullGrade to resolve
-        // console.log("Grades:", grades);
-
-        console.log(jsonToGPA(grades)); // Pass resolved data to jsonToGPA
-    } catch (error) {
-        console.error("Error fetching grades:", error);
+    if (!json || !json.cumulative) {
+      throw new Error("Invalid JSON structure");
     }
-}
-
-main();
+  
+    const { total, aCount, abCount, bCount, bcCount, cCount, dCount, fCount } = json.cumulative;
+  
+    if (total === 0) {
+      return [0, 0, 0, 0, 0, 0, 0];
+    }
+  
+    const gradeCounts = [aCount, abCount, bCount, bcCount, cCount, dCount, fCount];
+  
+    return gradeCounts.map(count => count / total);
+  }

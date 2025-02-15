@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>Website Name Detector</title>
-    <script src="popup.js" defer></script>
+    <title>Course Grades</title>
     <style>
+        body { width: 300px; font-family: Arial, sans-serif; }
+        canvas { width: 100%; height: 250px; }
     </style>
 </head>
 <body>
-    <h1>Madgrades Viewer</h1>
-    <p id="urlDisplay">Waiting for URL update...</p>
-    <button id="myButton">Click Me!</button>
-    <p id="nameDisplay">Waiting for name update...</p>
+    <h3>Course Grades</h3>
+    <canvas id="gradesChart"></canvas>
+
+    <script src="libs/Chart.min.js"></script>
+    <script src="popup.js"></script>
 </body>
 </html>
