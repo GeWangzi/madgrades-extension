@@ -26,8 +26,6 @@ observer.observe(document.documentElement, {
 
 async function pullGrade(courseName) {
 
-  courseName = courseName.replace(/ /g, ""); // Removes all spaces
-
   let url = "https://api.madgrades.com/v1/courses?query=" + courseName;
   const token = "bfc4b27f0b284ffbb1c6c3da7845f1ad ";
   //GET call for UUID

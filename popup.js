@@ -1,19 +1,3 @@
-// ////////////////////////////////////////////////
-// ///(WORKS)
-
-
-// async function main() {
-//     try {
-//         const grades = await pullGrade("cs200"); // Wait for pullGrade to resolve
-//         // console.log("Grades:", grades);
-
-//         console.log(jsonToGPA(grades)); // Pass resolved data to jsonToGPA
-//     } catch (error) {
-//         console.error("Error fetching grades:", error);
-//     }
-// }
-
-// main();
 // popup.js
 document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.local.get("courseGrades", (data) => {
