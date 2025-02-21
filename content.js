@@ -43,6 +43,7 @@ async function pullGrade(courseName) {
 
   const data = await courseData.json();
 
+  const name = data.results[0].name;
   //Grabs UUID
   // console.log(data)
   const uuid = data.results[0].uuid;
@@ -65,6 +66,6 @@ async function pullGrade(courseName) {
   const grades = await courseGrades.json();
   console.log(grades);
 
-  return grades;
+  return {grades: grades, name: name};
 };
 

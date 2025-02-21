@@ -1,11 +1,19 @@
 // popup.js
 document.addEventListener("DOMContentLoaded", () => {
+    //updates graph
     chrome.storage.local.get("courseGrades", (data) => {
         if (data.courseGrades) {
             console.log("Received grades:", data.courseGrades);
             displayChart(data.courseGrades.cumulative);
         }
     });
+    //updates title
+    chrome.storage.local.get("courseName", (data) => {
+      if (data.courseName) {
+          const title = document.getElementById("title")
+          title.textContent = data.courseName;
+      }
+  });
 });
 
 function displayChart(grades) {
