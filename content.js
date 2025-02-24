@@ -1,22 +1,33 @@
-//Usefull
-// console.log("Hi from console!")
-
-// content.js
 const observer = new MutationObserver(async () => {
-  console.log(document.documentElement.outerHTML);
+  let courseName = null;
 
-  const element = document.querySelector("h2");
-  if (element) {
-    console.log("Text Content:", element.textContent);
-    const grades = await pullGrade(element.textContent);
+  const h2 = document.querySelector("h2");
+  if (h2) {
+    courseName = h2.textContent;
+    console.log("Course name:", courseName);
+  }
+  
+  const elements = document.querySelectorAll("mat-toolbar span");
 
-    //send grade to backgroujnd.js
-    chrome.runtime.sendMessage({ type: "COURSE_GRADE", grades: grades });
+  if (elements.length > 0) {
+    const filteredElements = Array.from(elements).filter(e => /\d$/.test(e.textContent));
+    if (filteredElements.length !== 0) {
+      console.log("Detected elements:", Array.from(filteredElements).map(e=>{
+        return e.textContent;
+      }));
+      courseName = filteredElements[0].textContent;
+    }
+  }
+
+  if (courseName) {
+    console.log("Course name:", courseName);
+    const grades = await pullGrade(courseName);
+    grades.abbrev = courseName;
+    chrome.runtime.sendMessage({ type: "COURSE_GRADE", grades });
   }
   else {
-    console.log("Element not found.");
+    console.log("No course name detected");
   }
-
 });
 
 observer.observe(document.documentElement, {
@@ -64,7 +75,7 @@ async function pullGrade(courseName) {
   }
 
   const grades = await courseGrades.json();
-  console.log(grades);
+  // console.log(grades);
 
   return {grades: grades, name: name};
 };
