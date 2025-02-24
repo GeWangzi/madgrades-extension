@@ -89,7 +89,7 @@ function displayChart(grades) {
       datasets: [{
         label: "Grade Distribution",
         data: values,
-        backgroundColor: ["#4CAF50", "#8BC34A", "#FFEB3B", "#FF9800", "#FF5722", "#795548", "#F44336"]
+        backgroundColor: ["#4CAF50", "#8BC34A", "#FFEB3B", "#FF9800", "#FF5722", "#F44336", "#795548"]
       }]
     },
     options: {
