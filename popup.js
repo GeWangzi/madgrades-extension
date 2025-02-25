@@ -41,16 +41,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+function termcodeToTerm(termCode) {
+  const startCodes = [1014, 1016, 1022];
+  const termNames = ["Spring", "Summer", "Fall"];
+
+  for (let i = 0; i < startCodes.length; i++) {
+    let termDiff = termCode - startCodes[i];
+    if (termDiff % 10 === 0) {
+      const year = 2001 + termDiff / 10;
+      return `${termNames[i]} ${year}`;
+    }
+  }
+  return "Unknown Term";
+}
+
 function populateFilters(grades) {
   const termFilter = document.getElementById("termFilter");
   const instructorFilter = document.getElementById("instructorFilter");
 
   // Populate term filter
   const terms = [...new Set(grades.courseOfferings.map(offering => offering.termCode))];
-  terms.forEach(term => {
+  terms.forEach(termCode => {
     const option = document.createElement("option");
-    option.value = term;
-    option.textContent = term;
+    option.value = termCode; // Store the term code as the value
+    option.textContent = termcodeToTerm(termCode); // Display the human-readable term name
     termFilter.appendChild(option);
   });
 
@@ -83,7 +97,7 @@ function updateInstructorFilter(grades) {
   } else {
     // Filter instructors by selected term
     const instructors = [...new Set(grades.courseOfferings
-      .filter(offering => offering.termCode === selectedTerm)
+      .filter(offering => offering.termCode === parseInt(selectedTerm)) // Convert selectedTerm back to a number
       .flatMap(offering => offering.sections.flatMap(section => section.instructors.map(instructor => instructor.name))))];
     instructors.forEach(instructor => {
       const option = document.createElement("option");
@@ -104,10 +118,10 @@ function updateTermFilter(grades) {
   if (selectedInstructor === "all") {
     // If "All Instructors" is selected, show all terms
     const terms = [...new Set(grades.courseOfferings.map(offering => offering.termCode))];
-    terms.forEach(term => {
+    terms.forEach(termCode => {
       const option = document.createElement("option");
-      option.value = term;
-      option.textContent = term;
+      option.value = termCode; // Store the term code as the value
+      option.textContent = termcodeToTerm(termCode); // Display the human-readable term name
       termFilter.appendChild(option);
     });
   } else {
@@ -115,10 +129,10 @@ function updateTermFilter(grades) {
     const terms = [...new Set(grades.courseOfferings
       .filter(offering => offering.sections.some(section => section.instructors.some(instructor => instructor.name === selectedInstructor)))
       .map(offering => offering.termCode))];
-    terms.forEach(term => {
+    terms.forEach(termCode => {
       const option = document.createElement("option");
-      option.value = term;
-      option.textContent = term;
+      option.value = termCode; // Store the term code as the value
+      option.textContent = termcodeToTerm(termCode); // Display the human-readable term name
       termFilter.appendChild(option);
     });
   }
@@ -131,10 +145,7 @@ function applyFilters(grades) {
   let filteredGrades = { cumulative: { aCount: 0, abCount: 0, bCount: 0, bcCount: 0, cCount: 0, dCount: 0, fCount: 0 } };
 
   grades.courseOfferings.forEach(offering => {
-    console.log("selectedTerm", selectedTerm);
-    // console.log("selectedInstructor", selectedInstructor);
-    console.log("offering", offering.termCode);
-    if (selectedTerm === "all" || String(offering.termCode) === selectedTerm) {
+    if (selectedTerm === "all" || offering.termCode === parseInt(selectedTerm)) { // Convert selectedTerm back to a number
       offering.sections.forEach(section => {
         if (selectedInstructor === "all" || section.instructors.some(instructor => instructor.name === selectedInstructor)) {
           filteredGrades.cumulative.aCount += section.aCount || 0;
