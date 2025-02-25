@@ -5,10 +5,28 @@
     <style>
         body { width: 300px; font-family: Arial, sans-serif; }
         canvas { width: 100%; height: 250px; }
+        .filter-container { margin-bottom: 10px; }
+        label { display: block; margin-bottom: 5px; }
+        select { width: 100%; padding: 5px; }
     </style>
 </head>
 <body>
     <h3 id="title">Course Grades</h3>
+    
+    <div class="filter-container">
+        <label for="termFilter">Filter by Term:</label>
+        <select id="termFilter">
+            <option value="all">All Terms</option>
+        </select>
+    </div>
+
+    <div class="filter-container">
+        <label for="instructorFilter">Filter by Instructor:</label>
+        <select id="instructorFilter">
+            <option value="all">All Instructors</option>
+        </select>
+    </div>
+    
     <canvas id="gradesChart"></canvas>
 
     <script src="libs/Chart.min.js"></script>
