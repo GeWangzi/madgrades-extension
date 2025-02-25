@@ -38,7 +38,7 @@ observer.observe(document.documentElement, {
 async function pullGrade(courseName) {
 
   let url = "https://api.madgrades.com/v1/courses?query=" + courseName;
-  const token = "bfc4b27f0b284ffbb1c6c3da7845f1ad ";
+  const token = "257a7f2a18f84e76a28c25fbb72495a5 ";
   //GET call for UUID
   const courseData = await fetch(url, {
     method: "GET",
