@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Madgrades Viewer",
+  "name": "Madgrades+",
   "version": "1.0",
   "description": "Displays grade distribution for UW Madison courses.",
   "permissions": ["storage", "tabs"],
@@ -20,7 +20,7 @@
       "48": "icon.png",
       "128": "icon.png"
     },
-    "default_title": "Madgrades Viewer",
+    "default_title": "Madgrades+",
     "default_popup": "popup.html"
   }
 }
