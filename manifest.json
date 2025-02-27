@@ -3,7 +3,7 @@
   "name": "Madgrades+",
   "version": "1.0",
   "description": "Displays grade distribution for UW Madison courses.",
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage"],
   "host_permissions": ["https://enroll.wisc.edu/*"],
   "background": {
     "service_worker": "background.js"
